@@ -1,0 +1,17 @@
+name: Reusable deploy
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  reusable-production:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check secret
+        env:
+          DEPLOY: ${{ secrets.DEPLOY_TOKEN }}
+        run: '[ -n "$DEPLOY" ] && echo "reusable production DEPLOY_TOKEN available" || echo "missing"'
