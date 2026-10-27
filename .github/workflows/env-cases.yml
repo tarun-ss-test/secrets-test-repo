@@ -1,0 +1,38 @@
+name: Environment secret cases
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      env:
+        type: choice
+        options: [production, staging]
+        default: staging
+
+permissions:
+  contents: read
+
+jobs:
+  # OIDC case: static AWS keys fed into the AWS login action
+  oidc-aws:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Configure AWS credentials (dummy keys, expected to fail)
+        uses: aws-actions/configure-aws-credentials@v4
+        continue-on-error: true
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+  # Possible case: environment decided at run time, secret used nowhere else
+  dynamic-only:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env || 'staging' }}
+    steps:
+      - name: Check secret
+        env:
+          VALUE: ${{ secrets.DYNAMIC_ONLY_TOKEN }}
+        run: '[ -n "$VALUE" ] && echo "available" || echo "missing"'
