@@ -1,0 +1,9 @@
+name: call-reusable-no-inherit
+on: workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/env-reusable-deploy.yml
