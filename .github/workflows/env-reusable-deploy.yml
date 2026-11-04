@@ -1,0 +1,27 @@
+name: env-reusable-deploy
+on: workflow_call
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Use production secret
+        env:
+          TOKEN: ${{ secrets.REUSABLE_DEPLOY_TOKEN }}
+        run: |
+          test -n "$TOKEN"
+          echo "production secret received (value not printed)"
+
+      # Never runs. Lets the scan see the secret going into the AWS login
+      # action, so it shows OIDC Available (AWS).
+      - name: Configure AWS credentials
+        if: ${{ false }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.REUSABLE_DEPLOY_TOKEN }}
+          aws-secret-access-key: dummy-not-used
