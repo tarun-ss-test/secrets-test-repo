@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/tarun-ss-test/secrets-test-repo/issues"
   },
-  "homepage": "https://github.com/tarun-ss-test/secrets-test-repo#readme",
-  "dependencies": {
-    "is-odd": "3.0.1"
-  }
+  "homepage": "https://github.com/tarun-ss-test/secrets-test-repo#readme"
 }
